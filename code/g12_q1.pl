@@ -52,3 +52,36 @@ valid_solution(Solution) :-
 build_people([], [], [], [], []).
 build_people([N|Ns], [D|Ds], [L|Ls], [P|Ps], [p(N, D, L, P)|People]) :-
     build_people(Ns, Ds, Ls, Ps, People).
+
+%% ------------------------------------------------------------------
+%% Clues (each clue(N, Solution) assumes Solution is fully filled in)
+%% ------------------------------------------------------------------
+
+%% clue(+N, +Solution) is semidet.
+%  Succeeds exactly when clue number N holds in Solution.
+%  Each attribute value occurs exactly once in a candidate, so every
+%  member/2 lookup below matches exactly one friend (no duplicates).
+
+% Clue 1: The friend who prefers the AI project does not work in
+% research and is not Dana.
+clue(1, Solution) :-
+    member(p(Name, Dept, _, 'AI'), Solution),
+    Dept \== research,
+    Name \== 'Dana'.
+
+% Clue 2: Alex does not work in development and does not prefer C++.
+clue(2, Solution) :-
+    member(p('Alex', Dept, Lang, _), Solution),
+    Dept \== development,
+    Lang \== 'c++'.
+
+% Clue 3: The friend working in the testing department likes Python.
+clue(3, Solution) :-
+    member(p(_, testing, Lang, _), Solution),
+    Lang == python.
+
+% Clue 4: Ben prefers web projects and does not work in testing.
+clue(4, Solution) :-
+    member(p('Ben', Dept, _, Project), Solution),
+    Project == web,
+    Dept \== testing.
