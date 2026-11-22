@@ -95,3 +95,28 @@ tree_prec(op(Op, _, _), P) :-
 wrap(S, W) :-
     string_concat("(", S, S1),
     string_concat(S1, ")", W).
+
+%% ------------------------------------------------------------------
+%% Equations
+%% ------------------------------------------------------------------
+
+%% generate_equation(+List, -Equation) is nondet.
+%  Equation is a string "L=R" where L is the canonical form of an
+%  expression over a non-empty prefix of List, R the canonical form of
+%  an expression over the remaining non-empty suffix, and both sides
+%  have the same integer value. Every number is used once, in order.
+%  - Fails (no error, no loop) for [] and [_]: split/3 needs at least
+%    two elements.
+%  - Fails when no valid equation exists.
+%  - On backtracking, enumerates every valid equation exactly once.
+%    It is left nondet (not wrapped in once/1) so that a call with
+%    Equation already bound checks it against all equations.
+generate_equation(List, Equation) :-
+    split(List, LeftNums, RightNums),
+    build_expr(LeftNums, LVal, LTree),
+    build_expr(RightNums, RVal, RTree),
+    LVal =:= RVal,
+    format_expr(LTree, LStr),
+    format_expr(RTree, RStr),
+    string_concat(LStr, "=", S1),
+    string_concat(S1, RStr, Equation).
