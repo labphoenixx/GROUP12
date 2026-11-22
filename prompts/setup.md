@@ -1,0 +1,7 @@
+_Prompt 1: skills/prolog-dev/SKILL.md_
+
+Create a SKILL.md file for prolog-dev targeting SWI-Prolog 9.x. Include a YAML header (name: prolog-dev and a short description), coding conventions (snake_case naming, declarative comments explaining arguments and determinism), and how to run/test via swipl -q -f file.pl -g goal -t halt. Add a strict constraints section: only files with predicate definitions, no initialization directives, no calling halt/0 inside code, no assert/retract/b_setval/nb_setval, and only allowed libraries (lists, apply, yall, aggregate). Include a self-review checklist and common Prolog AI failure modes (like infinite loops on backtracking, using is instead of =:=, or failing to handle empty lists cleanly)
+
+_Prompt 2: skills/scheme-dev/SKILL.md_
+
+Create a SKILL.md file for scheme-dev targeting Racket 8.x using #lang racket/base. Include a YAML header (name: scheme-dev and a short description), coding conventions (kebab-case naming, recursive contracts/comments, preferring tail recursion with accumulators), and how to run via racket file.rkt. List the exact allowed built-ins (define, lambda, let, let\*, letrec, named let, if, cond, and, or, not, begin, quote, cons, car, cdr, list, up to 4-level c...r, null?, pair?, eq?, assq, assoc, arithmetic/comparison ops, max, display, newline, and read only for Q4). Explicitly ban length, append, reverse, map, filter, set!, strings, vectors, and loops, plus top-level calls/prints. Include a self-review checklist and common Scheme AI failure modes.
