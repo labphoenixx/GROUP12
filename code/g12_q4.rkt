@@ -83,3 +83,17 @@
                       (cons x new-elems)
                       new-elems)))))
       process)))
+
+;; ------------------------------------------------------------------
+;; S2.b / S2.c: insert-if-short (defined with make-inserter)
+;; ------------------------------------------------------------------
+
+;; insert-if-short : atom list number -> list
+;; Purpose: inserts x at the front of lst and of every list nested in
+;;   it, at every level, whose original length is less than n.
+;;   () has length 0, so it becomes (x) whenever 0 < n.
+;; Method: make-inserter with the length test (< len n). It uses
+;;   my-length and my-map internally.
+(define insert-if-short
+  (lambda (x lst n)
+    ((make-inserter x (lambda (len) (< len n))) lst)))
