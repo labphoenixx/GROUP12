@@ -115,6 +115,11 @@ clue(8, Solution) :-
     Dept == research,
     Lang \== javascript.
 
+% CLUE 9: The friend who prefers the AI project works in the testing department.
+clue(9, Solution) :-
+    member(p(_, Dept, _, 'AI'), Solution),
+    Dept == testing.
+
 %% ------------------------------------------------------------------
 %% Solving and printing
 %% ------------------------------------------------------------------

@@ -198,3 +198,45 @@ report :-
            ( format("~nSolution ~w:~n", [I]),
              forall(member(p(Nm,D,L,P), S),
                     format("  ~w = [~w, ~w, ~w]~n", [Nm,D,L,P])) )).
+
+%% ------------------------------------------------------------------
+%% clue 9 (P1.c)
+%% ------------------------------------------------------------------
+
+% The three solutions of clues 1-8. Solution 1 is good/1 above.
+sol2([p('Alex',design,java,embedded),
+      p('Ben',development,javascript,web),
+      p('Carla',testing,python,'AI'),
+      p('Dana',research,'c++',data)]).
+
+sol3([p('Alex',testing,python,embedded),
+      p('Ben',development,javascript,web),
+      p('Carla',design,java,'AI'),
+      p('Dana',research,'c++',data)]).
+
+:- begin_tests(clue9).
+
+test(unique_with_clue9, N == 1) :-
+    count_solutions([1,2,3,4,5,6,7,8,9], N).
+
+test(kept_solution_is_sol2, [true(S == Expected), nondet]) :-
+    sol2(Expected),
+    valid_solution(S),
+    forall(between(1, 9, K), clue(K, S)).
+
+test(clue9_holds_on_sol2, [nondet]) :-
+    sol2(S), clue(9, S).
+
+test(clue9_fails_on_sol1, [fail]) :-
+    good(S), clue(9, S).
+
+test(clue9_fails_on_sol3, [fail]) :-
+    sol3(S), clue(9, S).
+
+test(clue9_mentions_no_name) :-
+    % the clause body contains none of the four name atoms
+    clause(clue(9, _), Body),
+    \+ ( member(Name, ['Alex','Ben','Carla','Dana']),
+         sub_term(T, Body), T == Name ).   % == so variables don't match
+
+:- end_tests(clue9).
