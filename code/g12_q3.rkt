@@ -73,3 +73,50 @@
   (lambda (tree)
     (display (inorder tree))
     (newline)))
+
+;; ------------------------------------------------------------------
+;; S1.b: preorder, postorder, all traversals
+;; ------------------------------------------------------------------
+
+;; preorder : tree -> list
+;; Purpose: returns the values of tree in preorder
+;;   (node, left subtree, right subtree).
+;; Recursion: on the tree. Base case '() returns '(). Otherwise the
+;;   node value is consed onto (preorder left) followed by
+;;   (preorder right).
+;; Tail-recursive: no (two subtrees).
+(define preorder
+  (lambda (tree)
+    (if (null? tree)
+        '()
+        (cons (node-value tree)
+              (my-append (preorder (node-left tree))
+                         (preorder (node-right tree)))))))
+
+;; postorder : tree -> list
+;; Purpose: returns the values of tree in postorder
+;;   (left subtree, right subtree, node).
+;; Recursion: on the tree. Base case '() returns '(). Otherwise
+;;   (postorder left) followed by (postorder right) followed by the
+;;   one-element list of the node value.
+;; Tail-recursive: no (two subtrees).
+(define postorder
+  (lambda (tree)
+    (if (null? tree)
+        '()
+        (my-append (postorder (node-left tree))
+                   (my-append (postorder (node-right tree))
+                              (list (node-value tree)))))))
+
+;; print-all-traversals : tree -> (prints)
+;; Purpose: prints three lines with display: the inorder list, the
+;;   preorder list and the postorder list, each followed by a newline.
+;;   The empty tree prints () on all three lines.
+(define print-all-traversals
+  (lambda (tree)
+    (display (inorder tree))
+    (newline)
+    (display (preorder tree))
+    (newline)
+    (display (postorder tree))
+    (newline)))
