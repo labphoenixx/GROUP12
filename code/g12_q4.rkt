@@ -42,3 +42,44 @@
       (if (null? rest)
           (my-reverse acc)
           (loop (cdr rest) (cons (f (car rest)) acc))))))
+
+;; ------------------------------------------------------------------
+;; S2.c: higher-order inserter
+;; ------------------------------------------------------------------
+
+;; list-like? : any -> boolean
+;; Purpose: #t when e is a list: the empty list () or a pair.
+;;   Everything else (numbers, symbols) is an atom. There are no
+;;   dotted pairs in the input, so every pair is a proper list.
+(define list-like?
+  (lambda (e)
+    (or (null? e) (pair? e))))
+
+;; make-inserter : atom (number -> boolean) -> (list -> list)
+;; Purpose: returns a function of one list. That function inserts x at
+;;   the front of the list itself and of every list nested inside it,
+;;   at every level, whose length satisfies len-ok?.
+;; Length rule: the length of a list is its number of top-level
+;;   elements, measured on the ORIGINAL list, before any insertion
+;;   (my-length is applied to lst, not to the result). () has length 0.
+;; Recursion (inside process): on the nesting structure. Each element
+;;   that is a list is processed recursively (it is strictly smaller
+;;   than its parent); atoms are kept as they are. Base case: () has no
+;;   elements, so my-map returns () and only the length test remains.
+;; Tail-recursive: the walk along each list is (my-map is); descending
+;;   into sublists is not, so stack use grows with nesting depth
+;;   (depth 100 is tiny), not with list length.
+(define make-inserter
+  (lambda (x len-ok?)
+    (letrec ((process
+              (lambda (lst)
+                (let ((new-elems
+                       (my-map (lambda (e)
+                                 (if (list-like? e)
+                                     (process e)
+                                     e))
+                               lst)))
+                  (if (len-ok? (my-length lst))
+                      (cons x new-elems)
+                      new-elems)))))
+      process)))
