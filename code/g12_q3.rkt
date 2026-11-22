@@ -31,3 +31,45 @@
       (if (null? rest)
           acc
           (loop (cdr rest) (cons (car rest) acc))))))
+
+;; ------------------------------------------------------------------
+;; Tree access
+;; A tree is either '() or a three-element list (value left right).
+;; ------------------------------------------------------------------
+
+;; node-value : tree -> value      (the tree must not be empty)
+(define node-value (lambda (tree) (car tree)))
+
+;; node-left : tree -> tree        (the tree must not be empty)
+(define node-left (lambda (tree) (cadr tree)))
+
+;; node-right : tree -> tree       (the tree must not be empty)
+(define node-right (lambda (tree) (caddr tree)))
+
+;; ------------------------------------------------------------------
+;; S1.a: inorder
+;; ------------------------------------------------------------------
+
+;; inorder : tree -> list
+;; Purpose: returns the values of tree in inorder
+;;   (left subtree, node, right subtree).
+;; Recursion: on the tree. Base case '() returns '(). Otherwise the
+;;   result is (inorder left) followed by the node value consed onto
+;;   (inorder right). Both subtrees are strictly smaller.
+;; Tail-recursive: no (a tree has two subtrees, so at most one call
+;;   can be in tail position).
+(define inorder
+  (lambda (tree)
+    (if (null? tree)
+        '()
+        (my-append (inorder (node-left tree))
+                   (cons (node-value tree)
+                         (inorder (node-right tree)))))))
+
+;; print-inorder : tree -> (prints)
+;; Purpose: prints the inorder list of tree on one line with display,
+;;   then a newline. The empty tree prints ().
+(define print-inorder
+  (lambda (tree)
+    (display (inorder tree))
+    (newline)))
