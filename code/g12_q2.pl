@@ -120,3 +120,18 @@ generate_equation(List, Equation) :-
     format_expr(RTree, RStr),
     string_concat(LStr, "=", S1),
     string_concat(S1, RStr, Equation).
+
+%% all_equations(+List, -Equations) is det.
+%  Equations is the list of all valid equation strings for List,
+%  without duplicates, in standard order of terms (sort/2 both sorts
+%  and removes duplicates). Equations = [] when there is none,
+%  including for [] and [_], because findall/3 then collects nothing.
+all_equations(List, Equations) :-
+    findall(Eq, generate_equation(List, Eq), Eqs),
+    sort(Eqs, Equations).
+
+%% count_equations(+List, -N) is det.
+%  N is the number of equations in all_equations(List, _).
+count_equations(List, N) :-
+    all_equations(List, Equations),
+    length(Equations, N).
