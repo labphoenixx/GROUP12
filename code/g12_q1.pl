@@ -154,7 +154,7 @@ main :-
 %  Base case: [] prints nothing. Recursion: on the list.
 print_people([]).
 print_people([p(Name, Dept, Lang, Project)|People]) :-
-    format("~w~n[~w, ~w, ~w]~n", [Name, Dept, Lang, Project]),
+    format("~w = [~w, ~w, ~w]~n", [Name, Dept, Lang, Project]),
     print_people(People).
 
 %% ------------------------------------------------------------------
