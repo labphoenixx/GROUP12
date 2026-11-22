@@ -1,4 +1,6 @@
 :- use_module(library(lists)).
+:- use_module(library(apply)).
+:- use_module(library(aggregate)).
 
 %% ------------------------------------------------------------------
 %% Domain facts
@@ -149,3 +151,29 @@ print_people([]).
 print_people([p(Name, Dept, Lang, Project)|People]) :-
     format("~w = [~w, ~w, ~w]~n", [Name, Dept, Lang, Project]),
     print_people(People).
+
+%% ------------------------------------------------------------------
+%% Counting solutions
+%% ------------------------------------------------------------------
+
+%% count_solutions(+Active, -N) is det.
+%  N is the number of candidates from valid_solution/1 that satisfy
+%  every clue whose number is in Active; clues not in Active are
+%  ignored. Active = [] counts all 13824 candidates.
+%  No side effects: the count comes from aggregate_all/3.
+count_solutions(Active, N) :-
+    aggregate_all(count,
+                  ( valid_solution(Solution),
+                    satisfies_all(Active, Solution)
+                  ),
+                  N).
+
+%% satisfies_all(+Active, +Solution) is semidet.
+%  Succeeds when clue(K, Solution) holds for every K in Active.
+satisfies_all(Active, Solution) :-
+    maplist(clue_holds(Solution), Active).
+
+%% clue_holds(+Solution, +K) is semidet.
+%  Argument order flipped from clue/2 so it can be used with maplist/2.
+clue_holds(Solution, K) :-
+    clue(K, Solution).
