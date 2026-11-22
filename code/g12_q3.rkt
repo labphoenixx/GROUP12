@@ -120,3 +120,47 @@
     (newline)
     (display (postorder tree))
     (newline)))
+
+;; ------------------------------------------------------------------
+;; S1.c: height and leaf count
+;; ------------------------------------------------------------------
+
+;; height : tree -> number
+;; Purpose: height of tree. '() has height 0; a node has height
+;;   1 + the larger of its two subtree heights (a single node is 1).
+;; Recursion: on the tree; both subtrees are strictly smaller.
+;; Tail-recursive: no (two subtrees).
+(define height
+  (lambda (tree)
+    (if (null? tree)
+        0
+        (+ 1 (max (height (node-left tree))
+                  (height (node-right tree)))))))
+
+;; leaf? : tree -> boolean        (the tree must not be empty)
+;; Purpose: #t when both subtrees of the node are '().
+(define leaf?
+  (lambda (tree)
+    (and (null? (node-left tree))
+         (null? (node-right tree)))))
+
+;; count-leaves : tree -> number
+;; Purpose: number of leaves in tree. '() has 0 leaves; a leaf counts
+;;   as 1; any other node has the sum of its subtrees' leaves.
+;;   A node with exactly one empty child is not a leaf.
+;; Recursion: on the tree; both subtrees are strictly smaller.
+;; Tail-recursive: no (two subtrees).
+(define count-leaves
+  (lambda (tree)
+    (cond ((null? tree) 0)
+          ((leaf? tree) 1)
+          (else (+ (count-leaves (node-left tree))
+                   (count-leaves (node-right tree)))))))
+
+;; print-height-and-leaves : tree -> (prints)
+;; Purpose: prints the list (height leaf-count) on one line with
+;;   display, then a newline. The empty tree prints (0 0).
+(define print-height-and-leaves
+  (lambda (tree)
+    (display (list (height tree) (count-leaves tree)))
+    (newline)))
