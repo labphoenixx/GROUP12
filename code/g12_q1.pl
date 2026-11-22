@@ -112,3 +112,40 @@ clue(8, Solution) :-
     member(p(_, Dept, Lang, data), Solution),
     Dept == research,
     Lang \== javascript.
+
+%% ------------------------------------------------------------------
+%% Solving and printing
+%% ------------------------------------------------------------------
+
+%% solve(-Solution) is nondet.
+%  Solution is a candidate from valid_solution/1 that satisfies every
+%  clue from 1 to 8. Generate-then-test: the candidate is fully bound
+%  before any clue is checked.
+solve(Solution) :-
+    valid_solution(Solution),
+    clue(1, Solution),
+    clue(2, Solution),
+    clue(3, Solution),
+    clue(4, Solution),
+    clue(5, Solution),
+    clue(6, Solution),
+    clue(7, Solution),
+    clue(8, Solution).
+
+%% main is det.
+%  Prints the first solution of solve/1 as four lines, one per friend
+%  in the order Alex, Ben, Carla, Dana, in the form
+%  Name = [Dept, Lang, Project]
+%  once/1 keeps only the first solution, so main prints exactly once.
+main :-
+    once(solve(Solution)),
+    print_people(Solution).
+
+%% print_people(+People) is det.
+%  Prints each p(Name, Dept, Lang, Project) in People on its own line.
+%  ~w writes atoms without quotes, so 'AI' prints as AI and 'c++' as c++.
+%  Base case: [] prints nothing. Recursion: on the list.
+print_people([]).
+print_people([p(Name, Dept, Lang, Project)|People]) :-
+    format("~w = [~w, ~w, ~w]~n", [Name, Dept, Lang, Project]),
+    print_people(People).
